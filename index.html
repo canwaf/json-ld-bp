@@ -666,6 +666,73 @@
   <h2>Serializing Large Collections</h2>
   <p class="ednote">Describe schema.org extension using Role sub-class,
     Hydra collections, and LDP collections.</p>
+  <h3>Pagination</h3>
+    <p>Where streaming JSON-LD is not practical, pagination bounds memory demands 
+    instead. The two are complementary: streaming suits bulk transfer of a whole dataset, 
+    pagination suits interactive and partial access. Publishers unable to implement a 
+    streaming profile SHOULD paginate.</p>
+
+    <div class="practice">
+      <p class="practicedesc">
+      <span class="practicelab" id="hypermedia-controls">Paginate large collections 
+        using hypermedia controls</span>
+      Represent the collection as a `hydra:Collection` carrying `hydra:totalItems` and 
+      a `hydra:view` (a `hydra:PartialCollectionView`) with `first`, `next`, `previous`, 
+      `last` links. The view node should similarly have its own `@id` (the current 
+      page's URI) so pages are addressable and citable. Clients follow server-minted 
+      links rather than constructing URIs.</p>
+    </div>
+
+    <pre class="example"
+       data-transform="updateExample"
+       title="Hydra hypermedia controls for large collections">
+      {
+        "@context": [
+          "http://www.w3.org/ns/hydra/context.jsonld",
+          {
+            "sosa": "http://www.w3.org/ns/sosa/",
+            "geo": "http://www.opengis.net/ont/geosparql#"
+          }
+        ],
+        "@id": "http://example.org/foo",
+        "@type": "hydra:Collection",
+        "totalItems": 66208,
+        "view": {
+          "@id": "http://example.org/foo?page=2",
+          "@type": "hydra:PartialCollectionView",
+          "first": "http://example.org/foo?page=1",
+          "previous": "http://example.org/foo?page=1",
+          "next": "http://example.org/foo?page=3",
+          "last": "http://example.org/foo?page=663"
+        },
+        "member": [
+          {
+            "@id": "http://example.org/foo/bar",
+            "@type": ["sosa:FeatureOfInterest", "geo:Feature"]
+          }
+        ]
+      }
+  </pre>
+
+    <div class="practice">
+      <p class="practicedesc">
+      <span class="practicelab" id="hydra-members">Members dereferenceable identifiers</span>
+      Each member carries `@id` and `@type` plus its' properties; the full representation
+      lives at the member's own URI. Where the collection URI is a path prefix of member URIs
+      (`.../foo` → `.../foo/bar`), the containment is legible to
+      developers who expect JSON API access patterns — but the authoritative relationship is
+      the `hydra:member` assertion, not the path.</p>
+    </div>
+
+    <div class="practice">
+      <p class="practicedesc">
+      <span class="practicelab" id="link-headers">Mirror pagination in HTTP Link headers
+        (RFC 8288)</span>
+      Emit these same links on every paged response to support alternate serializations
+      which MUST NOT carry Hydra controls inline (e.g. `geo+json` or `csv`), so that the
+      view is treated as a resource with different serializations.</p>
+    </div>
+
 </section>
 
 <section class="informative">
