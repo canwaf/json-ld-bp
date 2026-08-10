@@ -668,18 +668,21 @@
 
   <p>Large collections force a choice the serialization itself can't make: deliver everything
     or deliver a bounded slice with directions to the rest. These two options, streaming and
-    pagination, are a spectrum and not alternatives dependent on the consumer's access pattern
-    and not the collection's size.</p>
+    pagination, are a spectrum and not alternatives, dependent on the consumer's access pattern
+    and not the collection's size. Streaming suits bulk transfer of a whole dataset;
+    pagination suits interactive and partial access.</p>
 
   <div class="practice">
     <p class="practicedesc">
       <span class="practicelab" id="collection-members">Collection members carry dereferencable
         identifiers</span>
-      Each member carries `@id` and `@type` plus their properties. Where the collection URI is a
-      path prefix of member URIs (`.../foo` → `.../foo/bar`), the containment is legible to
-      developers who expect JSON API access patterns — but the authoritative relationship is
-      the assertion of membership in the collection, not the path.
+      Each member carries `@id` and `@type` plus their properties, so a consumer can recover
+      any individual member independently of how it arrived.
     </p>
+
+    <p>Where the collection URI is a path prefix of member URIs (`.../foo` → `.../foo/bar`),
+      the containment is legible to developers who expect JSON API access patterns — but the
+      authoritative relationship is the assertion of membership in the collection, not the path.</p>
   </div>
 
   <h3>Streaming</h3>
@@ -688,10 +691,8 @@
   </p>
 
   <h3>Pagination</h3>
-  <p>Where streaming JSON-LD is not practical, pagination bounds memory demands
-    instead. The two are complementary: streaming suits bulk transfer of a whole dataset,
-    pagination suits interactive and partial access. Publishers unable to implement a
-    streaming profile SHOULD paginate.</p>
+  <p>Where streaming JSON-LD is not practical, pagination bounds memory demands instead.
+    Publishers unable to implement a streaming profile SHOULD paginate.</p>
 
   <div class="practice">
     <p class="practicedesc">
@@ -737,10 +738,9 @@
   <div class="practice">
     <p class="practicedesc">
       <span class="practicelab" id="link-headers">Mirror pagination in HTTP Link headers</span>
-      Emit these same links on every paged response to support alternate serializations
-      which cannot carry Hydra controls inline (e.g. `geo+json` or `csv`), so that the
-      view is treated as a resource with different serializations advertise the same pagination
-      relations in an HTTP `Link` header [[RFC8288]].
+      Emit these same links on every paged response so that alternate serializations which
+      cannot carry Hydra controls inline (e.g. `geo+json` or `csv`) advertise the same
+      pagination relations in an HTTP `Link` header [[RFC8288]].
     </p>
   </div>
 
