@@ -684,11 +684,11 @@
     <p class="practicedesc">
       <span class="practicelab" id="collection-members">Collection members carry dereferencable
         identifiers</span>
-      Members of a collection intended for independent access SHOULD each carry an `@id`,
-      so a consumer can recover any individual member independently of how it arrived, and
-      SHOULD carry an `@type`, so a consumer can interpret a member without refetching it
-      or consulting documentation. Collections whose members are blank nodes — with no
-      identity outside the document — are outside this practice.
+      Members of a collection that are intended to be independently accessible SHOULD
+      each carry an `@id`, so a consumer can recover any individual member without
+      concern for how it arrived, and SHOULD carry an `@type`, so a consumer can
+      interpret a member without refetching it or consulting documentation. Collections
+      whose members are blank nodes — with no identity outside of the document — are beyond this practice.
     </p>
 
     <p>Where the collection URI is a path prefix of member URIs (`.../foo` → `.../foo/bar`),
@@ -709,7 +709,7 @@
     <p class="practicedesc">
       <span class="practicelab" id="hypermedia-controls">Paginate large collections
         using hypermedia controls</span>
-      Represent the collection using [[hydra]] as a `hydra:Collection` carrying `hydra:totalItems` and
+      Represent the collection using [[Hydra]] as a `hydra:Collection` carrying `hydra:totalItems` and
       a `hydra:view` (a `hydra:PartialCollectionView`) with `hydra:first`, `hydra:previous`,
       `hydra:next`, and `hydra:last` links. The view node SHOULD have its own `@id` (the
       current page's URI) so pages are addressable and citable. Clients follow server-minted
@@ -752,8 +752,8 @@
       Emit the pagination relations in an HTTP `Link` header [[RFC8288]] on every paged
       response, in addition to any in-body controls. Link headers are independent of
       serialization, so clients can follow pagination without parsing the body, and
-      representations that cannot carry Hydra controls inline (e.g. `geo+json` or `csv`)
-      advertise the same relations. Where both are present they MUST agree.
+      representations that cannot carry Hydra controls in-line (e.g., `geo+json` or
+      `csv`) advertise the same relations. If both are present, they MUST agree.
     </p>
   </div>
 
