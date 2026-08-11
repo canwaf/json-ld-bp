@@ -23,6 +23,14 @@
               "title": "JSON-LD Best Practice: Context Caching",
               "href": "https://web.archive.org/web/20230131235929/https://manu.sporny.org/2016/json-ld-context-caching/",
               "date": "2016-04-24"
+            },
+            "hydra": {
+              "authors": [
+                "Markus Lanthaler"
+              ],
+              "title": "Hydra Core Vocabulary: A Vocabulary for Hypermedia-Driven Web APIs",
+              "href": "https://www.hydra-cg.com/spec/latest/core/",
+              "publisher": "Hydra W3C Community Group"
             }
           }
         },
@@ -676,8 +684,11 @@
     <p class="practicedesc">
       <span class="practicelab" id="collection-members">Collection members carry dereferencable
         identifiers</span>
-      Each member carries `@id` and `@type` plus their properties, so a consumer can recover
-      any individual member independently of how it arrived.
+      Members of a collection intended for independent access SHOULD each carry an `@id`,
+      so a consumer can recover any individual member independently of how it arrived, and
+      SHOULD carry an `@type`, so a consumer can interpret a member without refetching it
+      or consulting documentation. Collections whose members are blank nodes — with no
+      identity outside the document — are outside this practice.
     </p>
 
     <p>Where the collection URI is a path prefix of member URIs (`.../foo` → `.../foo/bar`),
@@ -698,7 +709,7 @@
     <p class="practicedesc">
       <span class="practicelab" id="hypermedia-controls">Paginate large collections
         using hypermedia controls</span>
-      Represent the collection as a `hydra:Collection` carrying `hydra:totalItems` and
+      Represent the collection using [[hydra]] as a `hydra:Collection` carrying `hydra:totalItems` and
       a `hydra:view` (a `hydra:PartialCollectionView`) with `hydra:first`, `hydra:previous`,
       `hydra:next`, and `hydra:last` links. The view node SHOULD have its own `@id` (the
       current page's URI) so pages are addressable and citable. Clients follow server-minted
@@ -738,9 +749,11 @@
   <div class="practice">
     <p class="practicedesc">
       <span class="practicelab" id="link-headers">Mirror pagination in HTTP Link headers</span>
-      Emit these same links on every paged response so that alternate serializations which
-      cannot carry Hydra controls inline (e.g. `geo+json` or `csv`) advertise the same
-      pagination relations in an HTTP `Link` header [[RFC8288]].
+      Emit the pagination relations in an HTTP `Link` header [[RFC8288]] on every paged
+      response, in addition to any in-body controls. Link headers are independent of
+      serialization, so clients can follow pagination without parsing the body, and
+      representations that cannot carry Hydra controls inline (e.g. `geo+json` or `csv`)
+      advertise the same relations. Where both are present they MUST agree.
     </p>
   </div>
 
